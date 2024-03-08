@@ -6,23 +6,34 @@ api_key = os.getenv('API_KEY')
 
 
 def get_coordinates(city_name):
-    """Gets Geolocation of City from OpenWeatherMap Geolocation API"""
+    """Gets Coordinates of City from OpenWeatherMap Geocoding API"""
     #https://openweathermap.org/api/geocoding-api
     api_url = f"http://api.openweathermap.org/geo/1.0/direct?q={city_name}&appid={api_key}"
-
+    try:
     #https://www.geeksforgeeks.org/response-reason-python-requests/?ref=lbp
-    response = requests.get(api_url)
-    response_data = response.json()
-
-    if response_data:
+        response = requests.get(api_url)
+        response.raise_for_status()
+        response_data = response.json()
+        
         lat = response_data[0]["lat"]
-        print(lat)
         lon = response_data[0]["lon"]
-        print(lon)
-        return lat, lon
-    else:
-        print("ERROR")
 
+        return lat, lon
+    #https://requests.readthedocs.io/en/latest/user/quickstart/#errors-and-exceptions
+    #https://openweathermap.org/faq#error401
+    except requests.exceptions.HTTPError as err:
+        if err.response.status_code == 401:
+            print(f"HTTP ERROR 401: API Key expired or Invalid") 
+        if err.response.status_code == 404:
+            print(f"HTTP ERROR 404: Could not find specified city") 
+        if err.response.status_code == 429:
+            print(f"HTTP ERROR 429: Surpassing the limit of your subscription of 60 API calls per minute")
+        if err.response.status_code == 500 or err.response.status_code == 502 or err.response.status_code == 503 or err.response.status_code == 504:
+            print(f"HTTP ERROR 429: Contact OpenWeatherMap for assistance") 
+        
+    except KeyError:
+        print("DATA ERROR: Could not use response data for Geolocation, check response and index")
+        
 
 def get_weather(lat, lon):
     """Gets weather data from OpenWeatherMap Current Weather data API"""
