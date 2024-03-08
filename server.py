@@ -1,6 +1,6 @@
 import requests
 import os
-import json
+from modules import commons
 
 api_key = os.getenv('API_KEY')
 
@@ -61,22 +61,9 @@ def get_temperature_humidity(lat, lon):
     else:
         print("ERROR")
 
-def get_city_name_from_config(config_file='config.json'):
-    """
-    Reads the city name from a configuration file.
-    :param config_file: The path to the configuration.json file
-    :return: The city name read from the file.
-    """
-    with open(config_file, 'r') as file:
-        config_dict = json.load(file)
-        return config_dict["city_name"]
-    
-
 if __name__ == "__main__":
-    
-    city_name = get_city_name_from_config()
-    
+    city_name = commons.get_data_from_config("city_name")
     lat, lon = get_coordinates(city_name)
-    
     temperature, humidity = get_temperature_humidity(lat, lon)
+
     print(f"Temperature in {city_name} is {temperature}°C and Humidity is {humidity}%")
