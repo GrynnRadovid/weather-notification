@@ -39,12 +39,13 @@ def get_coordinates(city_name):
         print("DATA ERROR: Could not use response data for Geolocation, check response and index")
         
 
-def get_weather(lat, lon):
+def get_temperature_humidity(lat, lon):
     """
     Gets weather data from OpenWeatherMap Current Weather data API using latitude and longitude provided by Geocoding API
     :param lat: The latitude of the location.
     :param lon: The longitude of the location.
     :return temperature: Return the temperature for the specified city.
+    :return humidity: Return the humidity for the specified city.
     """
     #https://openweathermap.org/current
     api_url = f"https://api.openweathermap.org/data/2.5/weather?lat={lat}&lon={lon}&appid={api_key}&units=metric"
@@ -55,7 +56,8 @@ def get_weather(lat, lon):
 
     if response_data:
         temperature = response_data["main"]["temp"]
-        return temperature
+        humidity = response_data["main"]["humidity"]
+        return temperature, humidity
     else:
         print("ERROR")
 
@@ -76,5 +78,5 @@ if __name__ == "__main__":
     
     lat, lon = get_coordinates(city_name)
     
-    temperature = get_weather(lat, lon)
-    print(f"Temperature in {city_name} is {temperature}°C")
+    temperature, humidity = get_temperature_humidity(lat, lon)
+    print(f"Temperature in {city_name} is {temperature}°C and Humidity is {humidity}%")
