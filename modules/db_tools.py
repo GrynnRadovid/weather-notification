@@ -1,15 +1,18 @@
 import mysql.connector
 import os
+
 # Database configuration
 
 
 db_config = {
-    'user':         'TEST_USER',
-    'password':     os.getenv('DB_PASSWORD'),
-    'host':         '127.0.0.1',
+    'user': 'TEST_USER',
+    'password': os.getenv('DB_PASSWORD'),
+    'host': '127.0.0.1',
     'database': '   weather_data'
 }
-#https://dev.mysql.com/doc/connector-python/en/
+
+
+# DOCS: https://dev.mysql.com/doc/connector-python/en/
 def write_to_db(temperature, humidity, row_id):
     """
     Writes the temperature and humidity to the mysql DB at the specified row_id.
@@ -21,7 +24,7 @@ def write_to_db(temperature, humidity, row_id):
     try:
         conn = mysql.connector.connect(**db_config)
         cursor = conn.cursor()
-        
+
         sql = """
         UPDATE temp_humidity
         SET temperature = %s, humidity = %s
@@ -35,6 +38,7 @@ def write_to_db(temperature, humidity, row_id):
         if conn is not None and conn.is_connected():
             cursor.close()
             conn.close()
+
 
 def read_from_db(row_id):
     """
@@ -66,5 +70,3 @@ def read_from_db(row_id):
         if conn is not None and conn.is_connected():
             cursor.close()
             conn.close()
-            
-    
