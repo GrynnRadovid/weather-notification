@@ -52,7 +52,7 @@ if __name__ == "__main__":
     print(f"Latest data: \nTemperature = {temperature} \nHumidity = {humidity}")
     print(f"Fetching previous data from DB")
     prev_temperature, prev_humidity = db_tools.read_from_db(prev_data_row)
-    print(f"Latest data: \nTemperature = {prev_temperature} \nHumidity = {prev_humidity}")
+    print(f"Previous data: \nTemperature = {prev_temperature} \nHumidity = {prev_humidity}")
 
     if temperature > prev_temperature + temperature_threshold or \
             temperature < prev_temperature - temperature_threshold or \
