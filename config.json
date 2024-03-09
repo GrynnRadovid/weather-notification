@@ -1,6 +1,6 @@
 {
     "city_name": "Iasi",
     "email_address": "testmail999999111111@gmail.com",
-    "temp_threshold": "1",
-    "humidity_threshold": "1"
+    "temperature_threshold": 1,
+    "humidity_threshold": 1
 }
