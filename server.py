@@ -14,7 +14,7 @@ def get_coordinates(city_name):
     # DOCS: https://openweathermap.org/api/geocoding-api
     api_url = f"http://api.openweathermap.org/geo/1.0/direct?q={city_name}&appid={api_key}"
     try:
-        # https://www.geeksforgeeks.org/response-reason-python-requests/?ref=lbp
+        # DOCS: https://www.geeksforgeeks.org/response-reason-python-requests/?ref=lbp
         response = requests.get(api_url)
         print(f"Fetching response from Geocoding API: Response:{response.status_code}")
         response.raise_for_status()
