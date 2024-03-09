@@ -16,6 +16,7 @@ def get_coordinates(city_name):
     try:
     #https://www.geeksforgeeks.org/response-reason-python-requests/?ref=lbp
         response = requests.get(api_url)
+        print(f"Fetching response from Geocoding API: Response:{response.status_code}")
         response.raise_for_status()
         response_data = response.json()
         
@@ -31,7 +32,7 @@ def get_coordinates(city_name):
         if err.response.status_code == 404:
             print(f"HTTP ERROR 404: Could not find specified city. {err}") 
         if err.response.status_code == 429:
-            print(f"HTTP ERROR 429: Surpassing the limit of your subscription of 60 API calls per minute. {err}")
+            print(f"HTTP ERROR 429: Surpassing the subscription limit of 60 API calls per minute. {err}")
         if err.response.status_code == 500 or err.response.status_code == 502 or err.response.status_code == 503 or err.response.status_code == 504:
             print(f"HTTP ERROR {err.response.status_code}: Contact OpenWeatherMap for assistance. {err}") 
         
@@ -50,16 +51,30 @@ def get_temperature_humidity(lat, lon):
     #https://openweathermap.org/current
     api_url = f"https://api.openweathermap.org/data/2.5/weather?lat={lat}&lon={lon}&appid={api_key}&units=metric"
 
-    #https://www.geeksforgeeks.org/response-reason-python-requests/?ref=lbp
-    response = requests.get(api_url)
-    response_data = response.json()
+    try:
+        #https://www.geeksforgeeks.org/response-reason-python-requests/?ref=lbp
+        response = requests.get(api_url)
+        print(f"Fetching response from Current Weather data API: Response:{response.status_code}")
+        response.raise_for_status()
+        response_data = response.json()
 
-    if response_data:
         temperature = response_data["main"]["temp"]
         humidity = response_data["main"]["humidity"]
         return temperature, humidity
-    else:
-        print("ERROR")
+
+    #https://openweathermap.org/faq#error401
+    except requests.exceptions.HTTPError as err:
+        if err.response.status_code == 401:
+            print(f"HTTP ERROR 401: API Key expired, missing or Invalid. {err}") 
+        if err.response.status_code == 404:
+            print(f"HTTP ERROR 404: Issue with either lat or lon data {err}") 
+        if err.response.status_code == 429:
+            print(f"HTTP ERROR 429: Surpassing the subscription limit of 60 API calls per minute. {err}")
+        if err.response.status_code == 500 or err.response.status_code == 502 or err.response.status_code == 503 or err.response.status_code == 504:
+            print(f"HTTP ERROR {err.response.status_code}: Contact OpenWeatherMap for assistance. {err}") 
+        
+    except KeyError:
+        print("DATA ERROR: Could not use response data for Current Weather, check response and index")
 
 if __name__ == "__main__":
     city_name = commons.get_data_from_config("city_name")
