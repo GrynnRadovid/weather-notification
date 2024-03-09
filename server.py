@@ -1,6 +1,6 @@
 import requests
 import os
-from modules import commons
+from modules import commons, db_tools
 
 api_key = os.getenv('API_KEY')
 
@@ -65,5 +65,7 @@ if __name__ == "__main__":
     city_name = commons.get_data_from_config("city_name")
     lat, lon = get_coordinates(city_name)
     temperature, humidity = get_temperature_humidity(lat, lon)
+    latest_data_row = 1
 
+    db_tools.write_to_db(temperature, humidity, latest_data_row)
     print(f"Temperature in {city_name} is {temperature}°C and Humidity is {humidity}%")
