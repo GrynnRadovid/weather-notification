@@ -22,7 +22,7 @@ def get_coordinates(city_name):
         
         lat = response_data[0]["lat"]
         lon = response_data[0]["lon"]
-
+        print(f"Fetched data from Geocoding API: \nLatitude = {lat} \nLongitude = {lon}")
         return lat, lon
     #https://requests.readthedocs.io/en/latest/user/quickstart/#errors-and-exceptions
     #https://openweathermap.org/faq#error401
@@ -60,6 +60,7 @@ def get_temperature_humidity(lat, lon):
 
         temperature = response_data["main"]["temp"]
         humidity = response_data["main"]["humidity"]
+        print(f"Fetched data from Current Weather data API: \nTemperature = {temperature} \nHumidity = {humidity}")
         return temperature, humidity
 
     #https://openweathermap.org/faq#error401
